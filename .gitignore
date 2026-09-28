@@ -1,8 +1,9 @@
-node_modules/
-build/
-dist/
-coverage/
+target*/*
+
 .DS_Store
-*.log
-.env*
-!.env.example
+.gc/
+legacy/react-prototype/
+vendor/*
+
+target-clean/debug/.fingerprint/agent-client-protocol-derive-c57c97714ab08c56/dep-lib-agent_client_protocol_derive
+secrets/*

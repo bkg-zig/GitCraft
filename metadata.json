@@ -1,6 +1,0 @@
-{
-  "name": "GitCraft Studio & OpenCodeReview Synthesizer",
-  "description": "Multi-repo GitHub feature extractor, innovative app ideation engine, agent coding planner, and OpenCodeReview integration.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

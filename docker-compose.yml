@@ -1,0 +1,74 @@
+name: gc
+
+services:
+  gc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gc:local
+    restart: unless-stopped
+    environment:
+      GC_PROJECT_ROOT: /workspace/bkg-alpha/GitCraft
+      GC_GOAL_INTERNAL_TOKEN_FILE: /run/secrets/gc_goal_internal_token
+      IP: 0.0.0.0
+      PORT: 3000
+      GC_API_KEY_FILE: /run/secrets/gc_llm_key
+      GC_API_URL_FILE: /run/secrets/gc_api_url
+      GC_MODEL: nvidia/nemotron-3.5-lightning-30b-a3b
+      GC_DATA_DIR: /var/lib/gc
+      DIOXUS_PUBLIC_PATH: /app/public
+      RUST_LOG: info
+    secrets:
+      - gc_llm_key
+      - gc_api_url
+      - gc_goal_internal_token
+    volumes:
+      - /workspace:/workspace
+      - /workspace/bkg-alpha/.gitcraft-state:/var/lib/gc
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - core
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:3000/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=bkg_net
+      - traefik.http.routers.gc.rule=Host(`gc.eysho.info`)
+      - traefik.http.routers.gc.entrypoints=websecure
+      - traefik.http.routers.gc.tls=true
+      - traefik.http.routers.gc.tls.certresolver=le
+      - traefik.http.routers.gc.service=gc
+      - traefik.http.services.gc.loadbalancer.server.port=3000
+    security_opt:
+      - no-new-privileges:true
+
+  gc-agent:
+    build:
+      context: ./sandbox/agent
+      dockerfile: Dockerfile
+    image: gc-agent:local
+    profiles: ["sandbox-images"]
+
+  gc-proxy:
+    build:
+      context: ./sandbox/proxy
+      dockerfile: Dockerfile
+    image: gc-proxy:local
+    profiles: ["sandbox-images"]
+
+networks:
+  core:
+    external: true
+    name: bkg_net
+
+secrets:
+  gc_llm_key:
+    file: ./secrets/api_key
+  gc_api_url:
+    file: ./secrets/api_url
+  gc_goal_internal_token:
+    file: /workspace/.secrets/gitcraft_goal_internal_token

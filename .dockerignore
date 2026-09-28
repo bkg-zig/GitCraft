@@ -1,0 +1,13 @@
+target/*
+!target/release/
+!target/release/gc-web
+!/usr/local/bin/gc
+**/dist
+legacy/react-prototype
+.git
+secrets
+.gc
+vendor/zerostack
+vendor/tsk-tsk
+vendor/open-code-review
+vendor/OpenViking

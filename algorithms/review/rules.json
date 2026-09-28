@@ -1,0 +1,122 @@
+[
+  {
+    "id": "rust.unwrap",
+    "severity": "medium",
+    "category": "maintainability",
+    "title": "Unchecked Result/Option unwrap",
+    "node_kinds": [
+      "call_expression"
+    ],
+    "text_any": [
+      ".unwrap("
+    ],
+    "message": "An unchecked unwrap can turn recoverable failure into a runtime panic."
+  },
+  {
+    "id": "rust.expect",
+    "severity": "medium",
+    "category": "maintainability",
+    "title": "Expectation can panic",
+    "node_kinds": [
+      "call_expression"
+    ],
+    "text_any": [
+      ".expect("
+    ],
+    "message": "Prefer explicit error propagation or a documented invariant."
+  },
+  {
+    "id": "rust.panic",
+    "severity": "high",
+    "category": "correctness",
+    "title": "Explicit panic path",
+    "node_kinds": [
+      "call_expression",
+      "macro_invocation"
+    ],
+    "text_any": [
+      "panic!"
+    ],
+    "message": "An explicit panic is present in executable code."
+  },
+  {
+    "id": "rust.todo",
+    "severity": "medium",
+    "category": "completeness",
+    "title": "Unfinished implementation marker",
+    "node_kinds": [
+      "macro_invocation",
+      "call_expression"
+    ],
+    "text_any": [
+      "todo!",
+      "unimplemented!"
+    ],
+    "message": "An unfinished implementation marker remains in the source."
+  },
+  {
+    "id": "process.shell",
+    "severity": "high",
+    "category": "security",
+    "title": "Process execution",
+    "node_kinds": [
+      "call_expression",
+      "new_expression"
+    ],
+    "text_any": [
+      "command::new",
+      "subprocess",
+      "child_process",
+      "exec("
+    ],
+    "message": "Process execution crosses a trust boundary and must remain sandboxed or explicitly reviewed."
+  },
+  {
+    "id": "security.eval",
+    "severity": "critical",
+    "category": "security",
+    "title": "Dynamic code evaluation",
+    "node_kinds": [
+      "call_expression"
+    ],
+    "text_any": [
+      "eval(",
+      "exec(",
+      "system("
+    ],
+    "message": "Dynamic evaluation may execute attacker-controlled code."
+  },
+  {
+    "id": "security.secret-literal",
+    "severity": "high",
+    "category": "security",
+    "title": "Potential hard-coded credential",
+    "node_kinds": [
+      "assignment_expression",
+      "variable_declarator",
+      "short_var_declaration",
+      "let_declaration"
+    ],
+    "text_any": [
+      "api_key",
+      "apikey",
+      "secret",
+      "password",
+      "token"
+    ],
+    "message": "A credential-looking identifier is assigned in executable source; verify that the value is not hard-coded."
+  },
+  {
+    "id": "rust.unsafe",
+    "severity": "medium",
+    "category": "security",
+    "title": "Unsafe block or item",
+    "node_kinds": [
+      "unsafe_block",
+      "unsafe_function_item",
+      "unsafe_impl"
+    ],
+    "text_any": [],
+    "message": "Unsafe Rust requires a narrow, documented safety invariant."
+  }
+]

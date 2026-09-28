@@ -1,0 +1,12 @@
+[
+  {"id":"web.http","label":"HTTP / Web APIs","markers":["router","route","axum","actix","express","fastapi","flask","fetch","reqwest","http","websocket"]},
+  {"id":"data.database","label":"Database / Persistence","markers":["postgres","postgresql","sqlite","sqlx","diesel","prisma","drizzle","redis","mongodb","mysql","database","transaction"]},
+  {"id":"agents.llm","label":"Agents / LLM","markers":["agent","llm","model","completion","inference","prompt","tool_call","subagent","acp","mcp"]},
+  {"id":"security.auth","label":"Authentication / Authorization","markers":["auth","jwt","token","cookie","session","permission","acl","argon","hmac","rbac","oauth"]},
+  {"id":"sandbox.execution","label":"Sandboxed Execution","markers":["sandbox","docker","podman","bwrap","container","namespace","seccomp"]},
+  {"id":"git.workflow","label":"Git / Worktree Workflow","markers":["git","worktree","commit","branch","libgit2","git2","merge"]},
+  {"id":"plugins.extensions","label":"Plugins / Extensions","markers":["plugin","extension","hook","middleware"]},
+  {"id":"async.concurrent","label":"Async / Concurrency","markers":["async","await","tokio","thread","channel","spawn","goroutine","promise"]},
+  {"id":"testing.validation","label":"Testing / Validation","markers":["test","assert","pytest","criterion","mock","fixture","snapshot"]},
+  {"id":"observability","label":"Observability","markers":["tracing","telemetry","metrics","opentelemetry","logging","span"]}
+]

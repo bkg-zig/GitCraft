@@ -1,0 +1,12 @@
+[application]
+name = "gc"
+asset_dir = "assets"
+
+[web.app]
+title = "GitCraft // GC"
+
+[web.resource]
+style = ["assets/gc.css"]
+
+[web.resource.dev]
+style = ["assets/gc.css"]
