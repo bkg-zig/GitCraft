@@ -1,6 +1,6 @@
 pub mod acp;
-pub mod agent;
 pub mod agents;
+pub mod agent;
 pub mod chat;
 pub mod codegraph;
 pub mod config;
@@ -31,3 +31,4 @@ pub fn init_engine(repo_root: std::path::PathBuf) -> anyhow::Result<Arc<Engine>>
 pub fn engine() -> anyhow::Result<Arc<Engine>> {
     ENGINE.get().cloned().ok_or_else(|| anyhow::anyhow!("GitCraft engine is not initialized"))
 }
+

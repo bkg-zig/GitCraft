@@ -4,7 +4,7 @@ use anyhow::{Context, Result};
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 
-use crate::{agent, codegraph, init_engine, review, vault};
+use crate::{agents, codegraph, init_engine, review, vault};
 
 const MAX_HISTORY: usize = 40;
 const CONTEXT_MESSAGES: usize = 12;
@@ -66,7 +66,7 @@ async fn handle_prompt(
 
     let context = build_context(history);
     println!("AGENT // working...");
-    let result = agent::run(repo, &context).await?;
+    let result = crate::agent::run(repo, &context).await?;
     println!("AGENT // {}", result.summary);
     println!("AGENT // steps={}", result.steps);
 
@@ -144,3 +144,5 @@ fn print_index(repo: &Path) -> Result<()> {
     println!("INDEX snapshot={} files={} features={} capabilities={}", snapshot, graph.files, graph.features.len(), graph.capabilities.len());
     Ok(())
 }
+
+// TODO: migrate to SQLite chat_sessions/chat_messages tables

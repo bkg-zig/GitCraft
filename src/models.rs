@@ -162,3 +162,41 @@ pub struct CraftPlan {
     pub suggestions: Vec<CraftProposal>,
     pub next_steps: Vec<String>,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ChatSession {
+    pub id: String,
+    pub title: String,
+    pub repo_root: String,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub model: Option<String>,
+    pub system_prompt: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ChatSessionSummary {
+    pub id: String,
+    pub title: String,
+    pub repo_root: String,
+    pub updated_at: DateTime<Utc>,
+    pub model: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ChatMessage {
+    pub id: i64,
+    pub session_id: String,
+    pub role: String,
+    pub content: String,
+    pub timestamp: DateTime<Utc>,
+    pub tool_calls: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NewChatSession {
+    pub repo_root: String,
+    pub title: Option<String>,
+    pub model: Option<String>,
+    pub system_prompt: Option<String>,
+}

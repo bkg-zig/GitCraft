@@ -53,6 +53,16 @@ fn status_class(s: &TaskStatus) -> &'static str { match s {
     TaskStatus::Complete=>"status status-complete", TaskStatus::Failed=>"status status-failed",
     TaskStatus::Cancelled=>"status status-cancelled", TaskStatus::Blocked=>"status status-blocked"
 }}
+
+#[component]
+fn ChatView() -> Element {
+    let mut chat_input = use_signal(|| String::new());
+    let mut mcp_server = use_signal(|| String::new());
+    rsx!{
+        section { class: "panel", h3 {"Chat"}, div { class: "mcp-selector", "MCP Server:", input { value: mcp_server, oninput: move |e| mcp_server.set(e.value()) } }, div { class: "chat-messages", "Streaming tokens & tool calls UI (stub)" }, div { class: "debug-panel", "Tool timeline stub" }, input { value: chat_input, oninput: move |e| chat_input.set(e.value()) } }
+    }
+}
+
 #[component]
 pub fn App() -> Element {
     let mut tab = use_signal(|| "ops".to_string());
@@ -75,7 +85,7 @@ pub fn App() -> Element {
                 div {class:"top-status", span {class:"status-dot"} span{"ONLINE"} span {class:"mono","gc.eysho.info"}}
             }
             nav {class:"nav",
-                for (id,label) in [("ops","CONTROL"),("craft","FOUNDRY"),("sentinel","SENTINEL"),("canvas","ARCHCANVAS"),("nexus","NEXUS")] {
+                for (id,label) in [("ops","CONTROL"),("craft","FOUNDRY"),("sentinel","SENTINEL"),("canvas","ARCHCANVAS"),("nexus","NEXUS"),("chat","CHAT")] {
                     button {class:if tab()==id {"nav-btn active"} else {"nav-btn"}, onclick:move |_| tab.set(id.to_string()), "{label}"}
                 }
                 button {class:"nav-btn utility",onclick:move |_| dashboard.restart(),"SYNC"}
@@ -120,6 +130,7 @@ pub fn App() -> Element {
                     "sentinel"=>rsx!{SentinelView{repo:repo(),notice}},
                     "canvas"=>rsx!{CanvasView{repo:repo(),notice}},
                     "nexus"=>rsx!{NexusView{notice}},
+                    "chat"=>rsx!{ChatView{}},
                     _=>rsx!{div{class:"empty","unknown module"}}
                 }
             }
@@ -285,3 +296,17 @@ fn NexusView(mut notice:Signal<String>)->Element{
         section{class:"panel",div{class:"panel-head",h3{"Model Catalog"}span{class:"micro-tag","SERVER SIDE"}},if let Some(v)=probe(){div{class:"model-grid",for m in v.models.iter(){span{class:"model-pill mono","{m}"}}}}else{div{class:"empty","Probe the gateway to show its actual model catalog."}}}
     }
 }
+
+#[get("/api/gc/chat/sessions")]
+pub async fn get_chat_sessions() -> Result<Vec<crate::models::ChatSessionSummary>, ServerFnError> {
+    Ok(vec![])
+}
+#[post("/api/gc/chat/sessions")]
+pub async fn create_chat_session(req: crate::models::NewChatSession) -> Result<crate::models::ChatSession, ServerFnError> {
+    Ok(crate::models::ChatSession { id: "".into(), title: "".into(), repo_root: req.repo_root, created_at: chrono::Utc::now(), updated_at: chrono::Utc::now(), model: req.model, system_prompt: req.system_prompt })
+}
+#[get("/api/gc/chat/sessions/{id}/messages")]
+pub async fn get_chat_messages(id: String) -> Result<Vec<crate::models::ChatMessage>, ServerFnError> {
+    Ok(vec![])
+}
+

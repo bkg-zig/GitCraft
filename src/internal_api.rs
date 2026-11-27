@@ -16,6 +16,9 @@ pub fn router() -> Router {
     Router::new()
         .route("/api/internal/goal/tasks", post(create_task))
         .route("/api/internal/goal/tasks/{id}", get(get_task))
+        .route("/api/internal/chat/sessions", post(create_chat_session))
+        .route("/api/internal/chat/sessions/{id}/messages", get(get_chat_messages))
+        .route("/api/internal/chat/sessions/{id}/messages/stream", post(stream_chat_message))
 }
 
 fn authorized(headers: &HeaderMap) -> bool {
@@ -99,3 +102,20 @@ async fn get_task(
     }
 }
 
+
+async fn create_chat_session(headers: HeaderMap, Json(req): Json<serde_json::Value>) -> impl IntoResponse {
+    if !authorized(&headers) { return (StatusCode::UNAUTHORIZED, Json(json!({"error":"unauthorized"}))).into_response(); } 
+    (StatusCode::OK, Json(json!({"id":"stub"}))).into_response()
+}
+async fn get_chat_messages(headers: HeaderMap, Path(id): Path<String>) -> impl IntoResponse {
+    if !authorized(&headers) { return (StatusCode::UNAUTHORIZED, Json(json!({"error":"unauthorized"}))).into_response(); } 
+    (StatusCode::OK, Json(json!([]))).into_response()
+}
+
+async fn stream_chat_message(headers: HeaderMap, Path(id): Path<String>, Json(body): Json<serde_json::Value>) -> impl IntoResponse {
+    if !authorized(&headers) { return (StatusCode::UNAUTHORIZED, Json(json!({"error":"unauthorized"}))).into_response(); }
+    let stream = axum::response::sse::Event::default().event("token").data("stream stub");
+    (StatusCode::OK, Json(json!({"status":"ok"}))).into_response()
+}
+
+// SSE events: data: {"type":"token","content":"..."} ; {"type":"tool_start","tool":"name","args":{}} ; {"type":"tool_result"}

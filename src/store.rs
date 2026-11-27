@@ -59,7 +59,37 @@ impl TaskStore {
                PRIMARY KEY(task_id, sequence)
              );
              CREATE INDEX IF NOT EXISTS idx_tasks_status_created ON tasks(status, created_at);
-             CREATE INDEX IF NOT EXISTS idx_task_logs_task ON task_logs(task_id, sequence);"
+             CREATE INDEX IF NOT EXISTS idx_task_logs_task ON task_logs(task_id, sequence);
+             CREATE TABLE IF NOT EXISTS chat_sessions (
+               id TEXT PRIMARY KEY,
+               title TEXT NOT NULL,
+               repo_root TEXT NOT NULL,
+               created_at TEXT NOT NULL,
+               updated_at TEXT NOT NULL,
+               model TEXT,
+               system_prompt TEXT
+             );
+             CREATE TABLE IF NOT EXISTS chat_messages (
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+               session_id TEXT NOT NULL,
+               role TEXT NOT NULL,
+               content TEXT NOT NULL,
+               timestamp TEXT NOT NULL,
+               tool_calls TEXT,
+               FOREIGN KEY(session_id) REFERENCES chat_sessions(id) ON DELETE CASCADE
+             );
+             CREATE TABLE IF NOT EXISTS chat_tool_calls (
+               id INTEGER PRIMARY KEY AUTOINCREMENT,
+               message_id INTEGER NOT NULL,
+               tool_name TEXT NOT NULL,
+               args TEXT,
+               result TEXT,
+               started_at TEXT NOT NULL,
+               finished_at TEXT,
+               FOREIGN KEY(message_id) REFERENCES chat_messages(id) ON DELETE CASCADE
+             );
+             CREATE INDEX IF NOT EXISTS idx_chat_messages_session ON chat_messages(session_id, timestamp);
+             CREATE INDEX IF NOT EXISTS idx_chat_tool_calls_message ON chat_tool_calls(message_id);"
         )?;
         Ok(())
     }
@@ -185,6 +215,11 @@ impl TaskStore {
         logs.reverse();
         Ok(logs)
     }
+
+    
+    pub fn create_chat_session(&self, id: &str, title: &str, repo_root: &str, model: Option<&str>, system_prompt: Option<&str>) -> Result<()> { Ok(()) }
+    pub fn list_chat_sessions(&self) -> Result<Vec<String>> { Ok(vec![]) }
+    pub fn add_chat_message(&self, session_id: &str, role: &str, content: &str) -> Result<i64> { Ok(0) }
 
     pub fn dashboard(&self) -> Result<DashboardSnapshot> {
         let tasks = self.list()?;
